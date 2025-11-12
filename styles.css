@@ -93,16 +93,19 @@ img {
 }
 
 :root {
-  --primary-color: #2c3e50;
-  --secondary-color: #bdc3c7;
-  --accent-color: #d4af37;
-  --text-color: #1a1a1a;
+--primary-color: #0066CC;
+  --secondary-color: #7CB518;
+  --accent-color: #FF4081;
+  --text-color: #4a4a4a;
   --light-text: #ffffff;
   --bg-white: #ffffff;
   --bg-light: #f8f9fa;
   --shadow: 0 4px 20px rgba(0,0,0,0.1);
   --nav-color: #1a1a1a;
   --nav-hover-color: #2c3e50;
+  --background-color: #FFFFFF;
+  --surface-color: #F6F9FC;
+  --text-secondary-color: #8c8c8c;
 }
 
 .container {
@@ -267,7 +270,7 @@ p {
 
 .nav-cta-btn {
   background: var(--primary-color);
-  color: var(--light-text);
+  color: #FFFFFF;
   padding: 12px 28px;
   border-radius: 6px;
   text-decoration: none;
@@ -278,8 +281,8 @@ p {
 }
 
 .nav-cta-btn:hover {
-  background: #1a2633;
-  border-color: #1a2633;
+  background: #0066CC;
+  border-color: #0066CC;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(44,62,80,0.3);
 }
@@ -634,8 +637,8 @@ section {
 }
 
 .btn-primary:hover {
-  background: #1a2633;
-  border-color: #1a2633;
+  background: #0066CC;
+  border-color: #0066CC;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(44,62,80,0.3);
 }
@@ -687,7 +690,7 @@ section {
     font-size: 24px;
     z-index: 1000;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    background: #25d366;
+    background: #7CB518;
     color: #FFFFFF;
     text-decoration: none;
   }
@@ -974,11 +977,11 @@ img, picture, figure {
 
     /* Legal Footer Styles - Header Colors */
     .legal-footer {
-      background-color: #f2f2f2;
+      background-color: #F6F9FC;
       color: #1a1a1a;
       padding: 20px 0;
       font-size: 16px;
-      border-top: 3px solid #1a202c;
+      border-top: 3px solid #0066CC;
     }
 
     .legal-footer .container {
@@ -1049,7 +1052,7 @@ img, picture, figure {
     }
 
     .legal-footer .footer-social a:hover {
-      color: #1a202c !important;
+      color: #0066CC !important;
       transform: scale(1.15);
       opacity: 1;
     }
@@ -1191,7 +1194,7 @@ img, picture, figure {
 /* Cookie Consent Customizations */
 :root {
   --cc-btn-primary-bg: #3b82f6;
-  --cc-btn-primary-border: #3b82f6;
+  --cc-btn-primary-border: #0066CC;
   --cc-btn-primary-hover-bg: #2269dd;
 }
 
