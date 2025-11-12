@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://neatnook-866dd7be.zappy5.app/sitemap.xml
