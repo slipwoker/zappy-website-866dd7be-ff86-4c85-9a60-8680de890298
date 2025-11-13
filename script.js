@@ -1,377 +1,130 @@
-// Prevent duplicate Zappy injection
-if (window.zappyContactFormLoaded) {
-  console.log('⚠️ Zappy: Contact form handler already loaded, skipping duplicate injection');
-} else {
-  window.zappyContactFormLoaded = true;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  const mobileToggle = document.getElementById('mobileToggle');
-  const navMenu = document.getElementById('navMenu');
-  
-  if (mobileToggle) {
-    mobileToggle.addEventListener('click', function() {
-      const hamburgerIcon = this.querySelector('.hamburger-icon');
-      const closeIcon = this.querySelector('.close-icon');
-      const isActive = this.classList.contains('active');
-      
-      if (isActive) {
-        hamburgerIcon.style.display = 'block';
-        closeIcon.style.display = 'none';
-        this.classList.remove('active');
-        navMenu.classList.remove('active');
-        document.body.style.overflow = '';
-      } else {
-        hamburgerIcon.style.display = 'none';
-        closeIcon.style.display = 'block';
-        this.classList.add('active');
-        navMenu.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      }
-    });
-    
-    const navLinks = navMenu.querySelectorAll('a');
-    navLinks.forEach(link => {
-      link.addEventListener('click', function() {
-        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
-        const closeIcon = mobileToggle.querySelector('.close-icon');
-        hamburgerIcon.style.display = 'block';
-        closeIcon.style.display = 'none';
-        mobileToggle.classList.remove('active');
-        navMenu.classList.remove('active');
-        document.body.style.overflow = '';
-      });
-    });
-  }
-  
-  const phoneHeaderBtn = document.querySelector('.phone-header-btn');
-  if (phoneHeaderBtn) {
-    phoneHeaderBtn.addEventListener('click', function() {
-      const phoneNumber = '0522944204';
-      window.location.href = 'tel:' + phoneNumber;
-    });
-  }
-  
-  const contactForm = document.getElementById('contactForm');
-  if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value
-      };
-      
-      console.log('Form submitted:', formData);
-      
-      // Zappy API Integration - Send to backend
-      if (!window.zappyContactFormLoaded) {
-        console.log('⚠️ Zappy: Contact form handler not initialized, skipping API call');
-      } else {
-        (async function() {
-          try {
-            console.log('📧 Zappy: Sending contact form to backend...');
-            const response = await fetch('https://qaapi.zappy5.com/api/email/contact-form', {
-              method: 'POST',
-              headers: { 
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                websiteId: '866dd7be-ff86-4c85-9a60-8680de890298',
-                name: formData.name,
-                email: formData.email,
-                subject: formData.subject || 'Contact Form Submission',
-                message: formData.message,
-                phone: formData.phone || null
-              })
-            });
-            
-            if (response.ok) {
-              const result = await response.json();
-              console.log('✅ Zappy: Email sent successfully', result);
-            } else {
-              console.error('❌ Zappy: Server returned error status', response.status);
-            }
-          } catch (error) {
-            console.error('❌ Zappy: Failed to send email', error);
-            // Don't break existing functionality - continue with existing behavior
-          }
-        })();
-      }
-      
-      // Keep existing behavior
-      alert('תודה על פנייתך! נחזור אליך בהקדם האפשרי.');
-      contactForm.reset();
-    });
-  }
-});
-
-/* Cookie Consent */
-
-// Helper function to check cookie consent
-function hasConsentFor(category) {
-  if (typeof window.CookieConsent === 'undefined') {
-    return false; // Default to no consent if cookie consent not loaded
-  }
-  
-  return window.CookieConsent.validConsent(category);
-}
-
-// Helper function to execute code only with consent
-function withConsent(category, callback) {
-  if (hasConsentFor(category)) {
-    callback();
-  } else {
-    console.log(`[WARNING] Skipping ${category} code - no user consent`);
-  }
-}
-
-// Cookie Consent Initialization
-
-(function() {
-  'use strict';
-  
-  let initAttempts = 0;
-  const maxAttempts = 50; // 5 seconds max wait
-  
-  // Wait for DOM and vanilla-cookieconsent to be ready
-  function initCookieConsent() {
-    initAttempts++;
-    
-    
-    if (typeof window.CookieConsent === 'undefined') {
-      if (initAttempts < maxAttempts) {
-        setTimeout(initCookieConsent, 100);
-      } else {
-      }
-      return;
-    }
-
-    const cc = window.CookieConsent;
-    
-    
-    // Initialize cookie consent
-    try {
-      cc.run({
-  "autoShow": true,
-  "mode": "opt-in",
-  "revision": 0,
-  "categories": {
-    "necessary": {
-      "enabled": true,
-      "readOnly": true
-    },
-    "analytics": {
-      "enabled": false,
-      "readOnly": false,
-      "autoClear": {
-        "cookies": [
-          {
-            "name": "_ga"
-          },
-          {
-            "name": "_ga_*"
-          },
-          {
-            "name": "_gid"
-          },
-          {
-            "name": "_gat"
-          }
-        ]
-      }
-    },
-    "marketing": {
-      "enabled": false,
-      "readOnly": false,
-      "autoClear": {
-        "cookies": [
-          {
-            "name": "_fbp"
-          },
-          {
-            "name": "_fbc"
-          },
-          {
-            "name": "fr"
-          }
-        ]
-      }
-    }
-  },
-  "language": {
-    "default": "he",
-    "translations": {
-      "he": {
-        "consentModal": {
-          "title": "אנחנו משתמשים בעוגיות 🍪",
-          "description": "NeatNook משתמש בעוגיות כדי לשפר את החוויה שלך, לנתח שימוש באתר ולסייע במאמצי השיווק שלנו.",
-          "acceptAllBtn": "אשר הכל",
-          "acceptNecessaryBtn": "רק הכרחי",
-          "showPreferencesBtn": "נהל העדפות",
-          "footer": "<a href=\"#privacy-policy\">מדיניות פרטיות</a> | <a href=\"#terms-conditions\">תנאי שימוש</a>"
-        },
-        "preferencesModal": {
-          "title": "העדפות עוגיות",
-          "acceptAllBtn": "אשר הכל",
-          "acceptNecessaryBtn": "רק הכרחי",
-          "savePreferencesBtn": "שמור העדפות",
-          "closeIconLabel": "סגור",
-          "sections": [
-            {
-              "title": "עוגיות חיוניות",
-              "description": "עוגיות אלה הכרחיות לתפקוד האתר ולא ניתן להשבית אותן.",
-              "linkedCategory": "necessary"
-            },
-            {
-              "title": "עוגיות ניתוח",
-              "description": "עוגיות אלה עוזרות לנו להבין איך המבקרים מתקשרים עם האתר שלנו.",
-              "linkedCategory": "analytics"
-            },
-            {
-              "title": "עוגיות שיווקיות",
-              "description": "עוגיות אלה משמשות להצגת פרסומות מותאמות אישית.",
-              "linkedCategory": "marketing"
-            }
-          ]
-        }
-      }
-    }
-  },
-  "guiOptions": {
-    "consentModal": {
-      "layout": "box",
-      "position": "bottom right",
-      "equalWeightButtons": true,
-      "flipButtons": false
-    },
-    "preferencesModal": {
-      "layout": "box",
-      "equalWeightButtons": true,
-      "flipButtons": false
-    }
-  }
-});
-      
-      // Optional: Handle consent changes (check if onChange is available)
-      if (typeof cc.onChange === 'function') {
-        cc.onChange(function(cookie, changed_preferences) {
-      
-      // Enable/disable analytics based on consent
-      if (changed_preferences.includes('analytics')) {
-        if (cc.validConsent('analytics')) {
-          // Enable analytics (e.g., Google Analytics)
-          // Example: gtag('consent', 'update', { analytics_storage: 'granted' });
-        } else {
-          // Example: gtag('consent', 'update', { analytics_storage: 'denied' });
-        }
-      }
-      
-      // Enable/disable marketing based on consent
-      if (changed_preferences.includes('marketing')) {
-        if (cc.validConsent('marketing')) {
-          // Example: gtag('consent', 'update', { ad_storage: 'granted' });
-        } else {
-          // Example: gtag('consent', 'update', { ad_storage: 'denied' });
-        }
-      }
-        });
-      } else {
-      }
-
-      // Note: Cookie Preferences button removed per marketing guidelines
-      // Footer should be clean and minimal - users can manage cookies via banner
-    } catch (error) {
-    }
-  }
-
-  // Initialize when DOM is ready - multiple approaches for reliability
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCookieConsent);
-    // Backup timeout in case DOMContentLoaded doesn't fire
-    setTimeout(initCookieConsent, 1000);
-  } else if (document.readyState === 'interactive' || document.readyState === 'complete') {
-    initCookieConsent();
-  } else {
-    // Fallback - try after a short delay
-    setTimeout(initCookieConsent, 500);
-  }
-  
-  // Additional fallback - try after page load
-  if (typeof window !== 'undefined') {
-    if (window.addEventListener) {
-      window.addEventListener('load', initCookieConsent, { once: true });
-    }
-  }
-})();
-
-/* Accessibility Features */
-
-/* Mickidum Accessibility Toolbar Initialization - Zappy Style */
-
-window.onload = function() {
-    
-    try {
-        window.micAccessTool = new MicAccessTool({
-            buttonPosition: 'left', // Position on left side
-            forceLang: 'he-IL', // Force language
-            icon: {
-                position: {
-                    bottom: { size: 50, units: 'px' },
-                    left: { size: 20, units: 'px' },
-                    type: 'fixed'
-                },
-                backgroundColor: 'transparent', // Transparent to allow CSS styling
-                color: 'transparent', // Let CSS handle coloring
-                img: 'accessible',
-                circular: false // Square button for consistent styling
-            },
-            menu: {
-                dimensions: {
-                    width: { size: 300, units: 'px' },
-                    height: { size: 'auto', units: 'px' }
-                }
-            }
-        });
-        
-    } catch (error) {
-    }
-    
-    // Keyboard shortcut handler: ALT+A (Option+A on Mac) to toggle accessibility widget visibility (desktop only)
-    document.addEventListener('keydown', function(event) {
-        // Check if ALT+A is pressed (ALT on Windows/Linux, Option on Mac)
-        var isAltOrOption = event.altKey || event.metaKey;
-        var isAKey = event.keyCode === 65 || event.which === 65 || 
-                      (event.key && (event.key.toLowerCase() === 'a' || event.key === 'å' || event.key === 'Å'));
-        
-        if (isAltOrOption && isAKey) {
-            // Only work on desktop (screen width > 768px)
-            if (window.innerWidth > 768) {
-                event.preventDefault();
-                event.stopPropagation();
-                
-                // Toggle visibility class on body
-                var isVisible = document.body.classList.contains('accessibility-widget-visible');
-                
-                if (isVisible) {
-                    // Hide the widget
-                    document.body.classList.remove('accessibility-widget-visible');
-                } else {
-                    // Show the widget
-                    document.body.classList.add('accessibility-widget-visible');
-                    
-                    // After a short delay, click the button to open the menu
-                    setTimeout(function() {
-                        var accessButton = document.getElementById('mic-access-tool-general-button');
-                        if (accessButton) {
-                            accessButton.click();
-                        }
-                    }, 200);
-                }
-            }
-        }
-    }, true);
-};
+ZnVuY3Rpb24gaGFzQ29uc2VudEZvcihlKXtyZXR1cm4gdm9pZCAwIT09d2lu
+ZG93LkNvb2tpZUNvbnNlbnQmJndpbmRvdy5Db29raWVDb25zZW50LnZhbGlk
+Q29uc2VudChlKX1mdW5jdGlvbiB3aXRoQ29uc2VudChlLHQpe2hhc0NvbnNl
+bnRGb3IoZSk/dCgpOmNvbnNvbGUubG9nKGBbV0FSTklOR10gU2tpcHBpbmcg
+JHtlfSBjb2RlIC0gbm8gdXNlciBjb25zZW50YCl9d2luZG93LnphcHB5Q29u
+dGFjdEZvcm1Mb2FkZWQ/Y29uc29sZS5sb2coIuKaoO+4jyBaYXBweTogQ29u
+dGFjdCBmb3JtIGhhbmRsZXIgYWxyZWFkeSBsb2FkZWQsIHNraXBwaW5nIGR1
+cGxpY2F0ZSBpbmplY3Rpb24iKTp3aW5kb3cuemFwcHlDb250YWN0Rm9ybUxv
+YWRlZD0hMCxkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCJET01Db250ZW50
+TG9hZGVkIixmdW5jdGlvbigpe2NvbnN0IGU9ZG9jdW1lbnQuZ2V0RWxlbWVu
+dEJ5SWQoIm1vYmlsZVRvZ2dsZSIpLHQ9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5
+SWQoIm5hdk1lbnUiKTtpZihlKXtlLmFkZEV2ZW50TGlzdGVuZXIoImNsaWNr
+IixmdW5jdGlvbigpe2NvbnN0IGU9dGhpcy5xdWVyeVNlbGVjdG9yKCIuaGFt
+YnVyZ2VyLWljb24iKSxuPXRoaXMucXVlcnlTZWxlY3RvcigiLmNsb3NlLWlj
+b24iKTt0aGlzLmNsYXNzTGlzdC5jb250YWlucygiYWN0aXZlIik/KGUuc3R5
+bGUuZGlzcGxheT0iYmxvY2siLG4uc3R5bGUuZGlzcGxheT0ibm9uZSIsdGhp
+cy5jbGFzc0xpc3QucmVtb3ZlKCJhY3RpdmUiKSx0LmNsYXNzTGlzdC5yZW1v
+dmUoImFjdGl2ZSIpLGRvY3VtZW50LmJvZHkuc3R5bGUub3ZlcmZsb3c9IiIp
+OihlLnN0eWxlLmRpc3BsYXk9Im5vbmUiLG4uc3R5bGUuZGlzcGxheT0iYmxv
+Y2siLHRoaXMuY2xhc3NMaXN0LmFkZCgiYWN0aXZlIiksdC5jbGFzc0xpc3Qu
+YWRkKCJhY3RpdmUiKSxkb2N1bWVudC5ib2R5LnN0eWxlLm92ZXJmbG93PSJo
+aWRkZW4iKX0pO3QucXVlcnlTZWxlY3RvckFsbCgiYSIpLmZvckVhY2gobj0+
+e24uYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLGZ1bmN0aW9uKCl7Y29uc3Qg
+bj1lLnF1ZXJ5U2VsZWN0b3IoIi5oYW1idXJnZXItaWNvbiIpLG89ZS5xdWVy
+eVNlbGVjdG9yKCIuY2xvc2UtaWNvbiIpO24uc3R5bGUuZGlzcGxheT0iYmxv
+Y2siLG8uc3R5bGUuZGlzcGxheT0ibm9uZSIsZS5jbGFzc0xpc3QucmVtb3Zl
+KCJhY3RpdmUiKSx0LmNsYXNzTGlzdC5yZW1vdmUoImFjdGl2ZSIpLGRvY3Vt
+ZW50LmJvZHkuc3R5bGUub3ZlcmZsb3c9IiJ9KX0pfWNvbnN0IG49ZG9jdW1l
+bnQucXVlcnlTZWxlY3RvcigiLnBob25lLWhlYWRlci1idG4iKTtuJiZuLmFk
+ZEV2ZW50TGlzdGVuZXIoImNsaWNrIixmdW5jdGlvbigpe3dpbmRvdy5sb2Nh
+dGlvbi5ocmVmPSJ0ZWw6MDUyMjk0NDIwNCJ9KTtjb25zdCBvPWRvY3VtZW50
+LmdldEVsZW1lbnRCeUlkKCJjb250YWN0Rm9ybSIpO28mJm8uYWRkRXZlbnRM
+aXN0ZW5lcigic3VibWl0IixmdW5jdGlvbihlKXtlLnByZXZlbnREZWZhdWx0
+KCk7Y29uc3QgdD17bmFtZTpkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgibmFt
+ZSIpLnZhbHVlLGVtYWlsOmRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJlbWFp
+bCIpLnZhbHVlLHBob25lOmRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCJwaG9u
+ZSIpLnZhbHVlLHN1YmplY3Q6ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInN1
+YmplY3QiKS52YWx1ZSxtZXNzYWdlOmRvY3VtZW50LmdldEVsZW1lbnRCeUlk
+KCJtZXNzYWdlIikudmFsdWV9O2NvbnNvbGUubG9nKCJGb3JtIHN1Ym1pdHRl
+ZDoiLHQpLHdpbmRvdy56YXBweUNvbnRhY3RGb3JtTG9hZGVkP2FzeW5jIGZ1
+bmN0aW9uKCl7dHJ5e2NvbnNvbGUubG9nKCLwn5OnIFphcHB5OiBTZW5kaW5n
+IGNvbnRhY3QgZm9ybSB0byBiYWNrZW5kLi4uIik7Y29uc3QgZT1hd2FpdCBm
+ZXRjaCgiaHR0cHM6Ly9xYWFwaS56YXBweTUuY29tL2FwaS9lbWFpbC9jb250
+YWN0LWZvcm0iLHttZXRob2Q6IlBPU1QiLGhlYWRlcnM6eyJDb250ZW50LVR5
+cGUiOiJhcHBsaWNhdGlvbi9qc29uIn0sYm9keTpKU09OLnN0cmluZ2lmeSh7
+d2Vic2l0ZUlkOiI4NjZkZDdiZS1mZjg2LTRjODUtOWE2MC04NjgwZGU4OTAy
+OTgiLG5hbWU6dC5uYW1lLGVtYWlsOnQuZW1haWwsc3ViamVjdDp0LnN1Ympl
+Y3R8fCJDb250YWN0IEZvcm0gU3VibWlzc2lvbiIsbWVzc2FnZTp0Lm1lc3Nh
+Z2UscGhvbmU6dC5waG9uZXx8bnVsbH0pfSk7aWYoZS5vayl7Y29uc3QgdD1h
+d2FpdCBlLmpzb24oKTtjb25zb2xlLmxvZygi4pyFIFphcHB5OiBFbWFpbCBz
+ZW50IHN1Y2Nlc3NmdWxseSIsdCl9ZWxzZSBjb25zb2xlLmVycm9yKCLinYwg
+WmFwcHk6IFNlcnZlciByZXR1cm5lZCBlcnJvciBzdGF0dXMiLGUuc3RhdHVz
+KX1jYXRjaChlKXtjb25zb2xlLmVycm9yKCLinYwgWmFwcHk6IEZhaWxlZCB0
+byBzZW5kIGVtYWlsIixlKX19KCk6Y29uc29sZS5sb2coIuKaoO+4jyBaYXBw
+eTogQ29udGFjdCBmb3JtIGhhbmRsZXIgbm90IGluaXRpYWxpemVkLCBza2lw
+cGluZyBBUEkgY2FsbCIpLGFsZXJ0KCLXqteV15PXlCDXotecINek16DXmdeZ
+16rXmiEg16DXl9eW15XXqCDXkNec15nXmiDXkdeU16fXk9edINeU15DXpNep
+16jXmS4iKSxvLnJlc2V0KCl9KX0pLGZ1bmN0aW9uKCl7InVzZSBzdHJpY3Qi
+O2xldCBlPTA7ZnVuY3Rpb24gdCgpe2lmKGUrKyx2b2lkIDA9PT13aW5kb3cu
+Q29va2llQ29uc2VudClyZXR1cm4gdm9pZChlPDUwJiZzZXRUaW1lb3V0KHQs
+MTAwKSk7Y29uc3Qgbj13aW5kb3cuQ29va2llQ29uc2VudDt0cnl7bi5ydW4o
+e2F1dG9TaG93OiEwLG1vZGU6Im9wdC1pbiIscmV2aXNpb246MCxjYXRlZ29y
+aWVzOntuZWNlc3Nhcnk6e2VuYWJsZWQ6ITAscmVhZE9ubHk6ITB9LGFuYWx5
+dGljczp7ZW5hYmxlZDohMSxyZWFkT25seTohMSxhdXRvQ2xlYXI6e2Nvb2tp
+ZXM6W3tuYW1lOiJfZ2EifSx7bmFtZToiX2dhXyoifSx7bmFtZToiX2dpZCJ9
+LHtuYW1lOiJfZ2F0In1dfX0sbWFya2V0aW5nOntlbmFibGVkOiExLHJlYWRP
+bmx5OiExLGF1dG9DbGVhcjp7Y29va2llczpbe25hbWU6Il9mYnAifSx7bmFt
+ZToiX2ZiYyJ9LHtuYW1lOiJmciJ9XX19fSxsYW5ndWFnZTp7ZGVmYXVsdDoi
+aGUiLHRyYW5zbGF0aW9uczp7aGU6e2NvbnNlbnRNb2RhbDp7dGl0bGU6IteQ
+16DXl9eg15Ug157Xqdeq157XqdeZ150g15HXoteV15LXmdeV16og8J+NqiIs
+ZGVzY3JpcHRpb246Ik5lYXROb29rINee16nXqtee16kg15HXoteV15LXmdeV
+16og15vXk9eZINec16nXpNeoINeQ16og15TXl9eV15XXmdeUINep15zXmiwg
+15zXoNeq15cg16nXmdee15XXqSDXkdeQ16rXqCDXldec16HXmdeZ16Ig15HX
+nteQ157XpteZINeU16nXmdeV15XXpyDXqdec16DXlS4iLGFjY2VwdEFsbEJ0
+bjoi15DXqdeoINeU15vXnCIsYWNjZXB0TmVjZXNzYXJ5QnRuOiLXqNenINeU
+15vXqNeX15kiLHNob3dQcmVmZXJlbmNlc0J0bjoi16DXlNecINeU16LXk9ek
+15XXqiIsZm9vdGVyOic8YSBocmVmPSIjcHJpdmFjeS1wb2xpY3kiPtee15PX
+mdeg15nXldeqINek16jXmNeZ15XXqjwvYT4gfCA8YSBocmVmPSIjdGVybXMt
+Y29uZGl0aW9ucyI+16rXoNeQ15kg16nXmdee15XXqTwvYT4nfSxwcmVmZXJl
+bmNlc01vZGFsOnt0aXRsZToi15TXoteT16TXldeqINei15XXkteZ15XXqiIs
+YWNjZXB0QWxsQnRuOiLXkNep16gg15TXm9ecIixhY2NlcHROZWNlc3NhcnlC
+dG46Iteo16cg15TXm9eo15fXmSIsc2F2ZVByZWZlcmVuY2VzQnRuOiLXqdee
+15XXqCDXlNei15PXpNeV16oiLGNsb3NlSWNvbkxhYmVsOiLXodeS15XXqCIs
+c2VjdGlvbnM6W3t0aXRsZToi16LXldeS15nXldeqINeX15nXldeg15nXldeq
+IixkZXNjcmlwdGlvbjoi16LXldeS15nXldeqINeQ15zXlCDXlNeb16jXl9eZ
+15XXqiDXnNeq16TXp9eV15Mg15TXkNeq16gg15XXnNeQINeg15nXqtefINec
+15TXqdeR15nXqiDXkNeV16rXny4iLGxpbmtlZENhdGVnb3J5OiJuZWNlc3Nh
+cnkifSx7dGl0bGU6Itei15XXkteZ15XXqiDXoNeZ16rXldeXIixkZXNjcmlw
+dGlvbjoi16LXldeS15nXldeqINeQ15zXlCDXoteV15bXqNeV16og15zXoNeV
+INec15TXkdeZ158g15DXmdeaINeU157Xkden16jXmdedINee16rXp9ep16jX
+mdedINei150g15TXkNeq16gg16nXnNeg15UuIixsaW5rZWRDYXRlZ29yeToi
+YW5hbHl0aWNzIn0se3RpdGxlOiLXoteV15LXmdeV16og16nXmdeV15XXp9eZ
+15XXqiIsZGVzY3JpcHRpb246Itei15XXkteZ15XXqiDXkNec15Qg157Xqdee
+16nXldeqINec15TXpteS16og16TXqNeh15XXnteV16og157Xldeq15DXnteV
+16og15DXmdep15nXqi4iLGxpbmtlZENhdGVnb3J5OiJtYXJrZXRpbmcifV19
+fX19LGd1aU9wdGlvbnM6e2NvbnNlbnRNb2RhbDp7bGF5b3V0OiJib3giLHBv
+c2l0aW9uOiJib3R0b20gcmlnaHQiLGVxdWFsV2VpZ2h0QnV0dG9uczohMCxm
+bGlwQnV0dG9uczohMX0scHJlZmVyZW5jZXNNb2RhbDp7bGF5b3V0OiJib3gi
+LGVxdWFsV2VpZ2h0QnV0dG9uczohMCxmbGlwQnV0dG9uczohMX19fSksImZ1
+bmN0aW9uIj09dHlwZW9mIG4ub25DaGFuZ2UmJm4ub25DaGFuZ2UoZnVuY3Rp
+b24oZSx0KXt0LmluY2x1ZGVzKCJhbmFseXRpY3MiKSYmbi52YWxpZENvbnNl
+bnQoImFuYWx5dGljcyIpLHQuaW5jbHVkZXMoIm1hcmtldGluZyIpJiZuLnZh
+bGlkQ29uc2VudCgibWFya2V0aW5nIil9KX1jYXRjaChlKXt9fSJsb2FkaW5n
+Ij09PWRvY3VtZW50LnJlYWR5U3RhdGU/KGRvY3VtZW50LmFkZEV2ZW50TGlz
+dGVuZXIoIkRPTUNvbnRlbnRMb2FkZWQiLHQpLHNldFRpbWVvdXQodCwxZTMp
+KToiaW50ZXJhY3RpdmUiPT09ZG9jdW1lbnQucmVhZHlTdGF0ZXx8ImNvbXBs
+ZXRlIj09PWRvY3VtZW50LnJlYWR5U3RhdGU/dCgpOnNldFRpbWVvdXQodCw1
+MDApLCJ1bmRlZmluZWQiIT10eXBlb2Ygd2luZG93JiZ3aW5kb3cuYWRkRXZl
+bnRMaXN0ZW5lciYmd2luZG93LmFkZEV2ZW50TGlzdGVuZXIoImxvYWQiLHQs
+e29uY2U6ITB9KX0oKSx3aW5kb3cub25sb2FkPWZ1bmN0aW9uKCl7dHJ5e3dp
+bmRvdy5taWNBY2Nlc3NUb29sPW5ldyBNaWNBY2Nlc3NUb29sKHtidXR0b25Q
+b3NpdGlvbjoibGVmdCIsZm9yY2VMYW5nOiJoZS1JTCIsaWNvbjp7cG9zaXRp
+b246e2JvdHRvbTp7c2l6ZTo1MCx1bml0czoicHgifSxsZWZ0OntzaXplOjIw
+LHVuaXRzOiJweCJ9LHR5cGU6ImZpeGVkIn0sYmFja2dyb3VuZENvbG9yOiJ0
+cmFuc3BhcmVudCIsY29sb3I6InRyYW5zcGFyZW50IixpbWc6ImFjY2Vzc2li
+bGUiLGNpcmN1bGFyOiExfSxtZW51OntkaW1lbnNpb25zOnt3aWR0aDp7c2l6
+ZTozMDAsdW5pdHM6InB4In0saGVpZ2h0OntzaXplOiJhdXRvIix1bml0czoi
+cHgifX19fSl9Y2F0Y2goZSl7fWRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIo
+ImtleWRvd24iLGZ1bmN0aW9uKGUpe3ZhciB0PWUuYWx0S2V5fHxlLm1ldGFL
+ZXksbj02NT09PWUua2V5Q29kZXx8NjU9PT1lLndoaWNofHxlLmtleSYmKCJh
+Ij09PWUua2V5LnRvTG93ZXJDYXNlKCl8fCLDpSI9PT1lLmtleXx8IsOFIj09
+PWUua2V5KTt0JiZuJiYod2luZG93LmlubmVyV2lkdGg+NzY4JiYoZS5wcmV2
+ZW50RGVmYXVsdCgpLGUuc3RvcFByb3BhZ2F0aW9uKCksZG9jdW1lbnQuYm9k
+eS5jbGFzc0xpc3QuY29udGFpbnMoImFjY2Vzc2liaWxpdHktd2lkZ2V0LXZp
+c2libGUiKT9kb2N1bWVudC5ib2R5LmNsYXNzTGlzdC5yZW1vdmUoImFjY2Vz
+c2liaWxpdHktd2lkZ2V0LXZpc2libGUiKTooZG9jdW1lbnQuYm9keS5jbGFz
+c0xpc3QuYWRkKCJhY2Nlc3NpYmlsaXR5LXdpZGdldC12aXNpYmxlIiksc2V0
+VGltZW91dChmdW5jdGlvbigpe3ZhciBlPWRvY3VtZW50LmdldEVsZW1lbnRC
+eUlkKCJtaWMtYWNjZXNzLXRvb2wtZ2VuZXJhbC1idXR0b24iKTtlJiZlLmNs
+aWNrKCl9LDIwMCkpKSl9LCEwKX07
