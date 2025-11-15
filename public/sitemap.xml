@@ -1,26 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://zappy-site-866dd7be-ff86-4c85-9a60.onrender.com</loc>
-    <lastmod>2025-11-12</lastmod>
+    <loc>https://zappy-site-866dd7be-ff86-4c85-9a60.onrender.com/about</loc>
+    <lastmod>2025-11-15</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://zappy-site-866dd7be-ff86-4c85-9a60.onrender.com/blog</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://zappy-site-866dd7be-ff86-4c85-9a60.onrender.com/contact</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://zappy-site-866dd7be-ff86-4c85-9a60.onrender.com</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://zappy-site-866dd7be-ff86-4c85-9a60.onrender.com/portfolio</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://zappy-site-866dd7be-ff86-4c85-9a60.onrender.com/services</loc>
+    <lastmod>2025-11-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://zappy-site-866dd7be-ff86-4c85-9a60.onrender.com/privacy</loc>
-    <lastmod>2025-11-12</lastmod>
+    <lastmod>2025-11-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://zappy-site-866dd7be-ff86-4c85-9a60.onrender.com/terms</loc>
-    <lastmod>2025-11-12</lastmod>
+    <lastmod>2025-11-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://zappy-site-866dd7be-ff86-4c85-9a60.onrender.com/accessibility</loc>
-    <lastmod>2025-11-12</lastmod>
+    <lastmod>2025-11-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
